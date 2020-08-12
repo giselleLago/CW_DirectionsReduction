@@ -7,101 +7,31 @@ namespace CW_DirectionsReduction
 {
     public class DirReduction
     {
-        public string[] dirReduc(String[] arr)
+        public string[] dirReduc(String[] arr, int from = 0)
         {
-            var lastDir = "";
+            //Console.WriteLine("Input: " + string.Join(", ", arr));
             var list = arr.ToList();
+            var next = from + 1;
             var isNull = new string[] { "NORTH", "SOUTH", "WEST", "EAST" };
-            for (int i = 0; i < list.Count; i++)
+            if (list == null)
+                return isNull;
+            else if (list.Count == 0)
+                return isNull;
+            else if (list.Count == 1)
+                return list.ToArray();
+            else if (from >= list.Count)
+                return isNull;
+            else if (from < 0)
+                from = 0;
+            
+            if ((from < list.Count - 1) && (list[from] == "NORTH" && list[next] == "SOUTH" || list[from] == "SOUTH" && list[next] == "NORTH" || list[from] == "WEST" && list[next] == "EAST" || list[from] == "EAST" && list[next] == "WEST"))
             {
-                switch (list[i])
-                {
-                    case "NORTH":
-                        if (lastDir == "SOUTH")
-                        {
-                            list.Remove(list[i]);
-                            i--;
-                            list.Remove(list[i]);
-                            i--;
-                            if (i < 0)
-                            {
-                                i = 0;
-                            }
-                            lastDir = list[i];
-                            break;
-                        }
-                        if (list.Count == 0)
-                        {
-                            return isNull;
-                        }
-                        lastDir = list[i];
-                        break;
-
-                    case "SOUTH":
-                        if (lastDir == "NORTH")
-                        {
-                            list.Remove(list[i]);
-                            i--;
-                            list.Remove(list[i]);
-                            i--;
-                            if (i < 0)
-                            {
-                                i = 0;
-                            }
-                            lastDir = list[i];
-                            break;
-                        }
-                        if (list.Count == 0)
-                        {
-                            return isNull;
-                        }
-                        lastDir = list[i];
-                        break;
-
-                    case "WEST":
-                        if (lastDir == "EAST")
-                        {
-                            list.Remove(list[i]);
-                            i--;
-                            list.Remove(list[i]);
-                            i--;
-                            if (i < 0)
-                            {
-                                i = 0;
-                            }
-                            if (list.Count == 0)
-                            {
-                                return isNull;
-                            }
-                            lastDir = list[i];
-                            break;
-                        }
-                        lastDir = list[i];
-                        break;
-
-                    default:
-                        if (lastDir == "WEST")
-                        {
-                            list.Remove(list[i]);
-                            i--;
-                            list.Remove(list[i]);
-                            i--;
-                            if (i < 0)
-                            {
-                                i = 0;
-                            }
-                            if (list.Count == 0)
-                            {
-                                return isNull;
-                            }
-                            lastDir = list[i];
-                            break;
-                        }
-                        lastDir = list[i];
-                        break;
-                }
+                list.Remove(list[next]);
+                list.Remove(list[from]);
+                return dirReduc(list.ToArray(), 0);
             }
-            return list.ToArray();
+            return dirReduc(list.ToArray(), from + 1);
+
         }
     }
 }
